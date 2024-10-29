@@ -38,10 +38,10 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title text-uppercase text-primary">Zanaco</h5>
-                                    <p class="card-text">icon</p>
+                                    <img src="{{ asset('images/zanaco.png') }}" alt="Zanaco">
                                 </div>
                                 <div class="footer1">
-                                    <p class="text-muted2 font-weight-normal">K
+                                    <p class="text-muted2 font-weight-normal">
                                      {{ $Zanaco}}</p>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title text-uppercase text-primary">FNB</h5>
-                                    <p class="card-text">icon</p>
+                                    <img src="{{ asset('images/FNB-Logo.png') }}" alt="FNB">
                                 </div>
                                 <div class="footer1">
                                     <p  class="text-muted2 font-weight-normal">K
@@ -65,8 +65,8 @@
                         <div class="col-md-4 mb-4">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title text-uppercase text-primary">Mobile Money</h5>
-                                    <p class="card-text">icon</p>
+                                    <h5 class="card-title text-uppercase text-primary">Airtel Money</h5>
+                                    <img src="{{ asset('images/airtel2.png') }}" alt="Airtel Money">
                                 </div>
                                 <div class="footer1">
                                     <p

@@ -18,7 +18,6 @@
             color: black;
         }
 
-        /* Header Styling */
         .header {
             background-color: #343a40;
             color: white;
@@ -28,7 +27,6 @@
             font-weight: bold;
         }
 
-        /* Footer Styling */
         .footer {
             background-color: #343a40;
             color: white;
@@ -39,7 +37,6 @@
             bottom: 0;
         }
 
-        /* Main Content Styling */
         .container {
             max-width: 1200px;
             margin: 50px auto;
@@ -62,10 +59,19 @@
             text-align: center;
             transition: transform 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card:hover {
             transform: scale(1.05);
+        }
+
+        .card img {
+            width: 50px;
+            height: 50px;
+            margin: 10px 0;
         }
 
         .card-title {
@@ -74,53 +80,14 @@
             margin-bottom: 10px;
         }
 
-        .card-text {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
         .footer1 {
             background-color: #f8f9fa;
             padding: 10px;
             border-top: 1px solid #ddd;
-        }
-
-        /* Modal styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 50%;
-        }
-
-        .modal-header {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        .modal-footer {
-            text-align: right;
-        }
-
-        .modal-footer button {
-            padding: 10px 20px;
-            margin-left: 10px;
-        }
-
-        /* Table Styling */
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -146,38 +113,30 @@
 <body>
 
     <!-- Header -->
-    <!-- <div class="header">
-        View Church Members
-    </div> -->
+    <!-- <div class="header">View Church Members</div> -->
 
     <!-- Main Content -->
     <div class="container">
         <div class="row">
             <div class="card" onclick="showModal('Zanaco')">
-                <div class="card-body">
-                    <h5 class="card-title">Zanaco</h5>
-                    <p class="card-text">icon</p>
-                </div>
+                <h5 class="card-title">Zanaco</h5>
+                <img src="{{ asset('images/zanaco.png') }}" alt="Zanaco">
                 <div class="footer1">
                     <p>Pay using Zanaco</p>
                 </div>
             </div>
 
             <div class="card" onclick="showModal('FNB')">
-                <div class="card-body">
-                    <h5 class="card-title">FNB</h5>
-                    <p class="card-text">icon</p>
-                </div>
+                <h5 class="card-title">FNB</h5>
+                <img src="{{ asset('images/FNB-Logo.png') }}" alt="FNB">
                 <div class="footer1">
                     <p>Pay using FNB</p>
                 </div>
             </div>
 
             <div class="card" onclick="showModal('Airtel Money')">
-                <div class="card-body">
-                    <h5 class="card-title">Airtel Money</h5>
-                    <p class="card-text">icon</p>
-                </div>
+                <h5 class="card-title">Airtel Money</h5>
+                <img src="{{ asset('images/airtel2.png') }}" alt="Airtel Money">
                 <div class="footer1">
                     <p>Pay using Airtel Money</p>
                 </div>
@@ -206,40 +165,30 @@
     </div>
 
     <!-- Modal -->
-<div id="exampleModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            Pay
-        </div>
-        <div class="modal-body">
-            <form method="POST" autocomplete="on" action="{{ url('/pay_employee') }}">
-            @csrf
-                <!-- Hidden input to store payment type -->
-                <input type="hidden" name="type" value="FNB">
-                
-                <label for="employee-select">Select Employee:</label>
-                <select id="employee-select" name="employee" required>
-                    <option selected disabled>Select Employee</option>
-                    <!-- Options will be populated by JavaScript -->
-                </select>
-
-                <label for="amount-input">Amount:</label>
-                <input type="number" name="amount" id="amount-input" required min="1">
-
-                <button class="btn btn-success" type="submit">Pay</button>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-success" type="button" onclick="closeModal()">Close</button>
+    <div id="exampleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Pay</div>
+            <div class="modal-body">
+                <form method="POST" autocomplete="on" action="{{ url('/pay_employee') }}">
+                    @csrf
+                    <input type="hidden" name="type" value="FNB">
+                    <label for="employee-select">Select Employee:</label>
+                    <select id="employee-select" name="employee" required>
+                        <option selected disabled>Select Employee</option>
+                    </select>
+                    <label for="amount-input">Amount:</label>
+                    <input type="number" name="amount" id="amount-input" required min="1">
+                    <button class="btn btn-success" type="submit">Pay</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" onclick="closeModal()">Close</button>
+            </div>
         </div>
     </div>
-</div>
-
 
     <!-- Footer -->
-    <div class="footer">
-        Copyright © University SDA Church 2024
-    </div>
+    <div class="footer">Copyright © University SDA Church 2024</div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -256,10 +205,8 @@
                 });
         });
 
-    
         function showModal(recipient) {
             document.getElementById("exampleModal").style.display = "block";
-            // document.querySelector(".modal-header").textContent = `New message to ${recipient}`;
             document.querySelector(".modal-header").textContent = `Pay with ${recipient}`;
         }
 
