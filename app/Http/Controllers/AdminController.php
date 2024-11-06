@@ -363,6 +363,7 @@ public function view_schedule($id)
         $data->account_number  = $request->account_number ;
         $data->mobile = $request->mobile ;
         $data->email = $request->email ;
+        $data->etype = $request->etype ;
         $data->save();
 
         return redirect()->back()->with('message', 'Employee Added Successfully');
@@ -448,9 +449,11 @@ public function view_schedule($id)
     public function payroll()
     {
         $employees = Employees::all();
-        $employeesCount = Employees::count(); 
+        $employeesCount = Employees::count();
+        $paids = Employees::where('etype', '=', 'paid')->get();
+        $unpaids = Employees::where('etype', '=', 'unpaid')->get();
 
-        return view('admin.payroll', compact('employees', 'employeesCount'));
+        return view('admin.payroll', compact('employees', 'employeesCount','paids', 'unpaids'));
     }
 
     public function ewallet()

@@ -51,6 +51,14 @@
                 </div>
 
                 <div class="input-group">
+                    <select id="etype" name="etype" required="required" class="input" autocomplete="off">
+                    <option value="Marital Status">Employee Type</option>
+                        <option value="paid">Paid</option>
+                        <option value="unpaid">UnPaid</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
                     <input id="address" name="address" type="text" required autofocus autocomplete="address " class="input" />
                     <label for="address" class="placeholder" data-icon="u">Address </label>
                 </div>
