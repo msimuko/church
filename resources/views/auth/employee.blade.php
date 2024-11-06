@@ -89,7 +89,7 @@
                                     <td> {{$employee->email}} </td>
                                     <td>
                                         <a onclick="return confirm('Are You Sure You Want To Delete This Member')"
-                                            class="btn btn-danger" href="">
+                                            class="btn btn-danger" href="{{ url('/delete_employees', $employee->id) }}">
                                             <i class="fa-solid fa-trash icon-medium"></i>
                                         </a>
                                     </td>

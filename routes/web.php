@@ -107,5 +107,11 @@ Route::get('/depositamount', [AdminController::class, 'depositamount']);
 Route::get('/update_employee/{id}', [AdminController::class, 'update_employee']);
 // web.php
 Route::post('/pay_employee', [AdminController::class, 'payEmployee']);
-
+Route::get('/delete_employees/{id}', [AdminController::class, 'delete_employees']);
 Route::get('/employeetoshow', [AdminController::class, 'index']);
+Route::get('/projects', [AdminController::class, 'projects']);
+Route::get('/addproject', [AdminController::class, 'addproject']);
+Route::post('/createproject', [AdminController::class, 'createproject']);
+Route::get('/editproject/{id}', [AdminController::class, 'editproject']);
+Route::put('/updateproject/{id}', [AdminController::class, 'updateproject']);
+Route::get('/deleteprojects/{id}', [AdminController::class, 'deleteprojects']);

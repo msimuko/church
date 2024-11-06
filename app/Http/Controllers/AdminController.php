@@ -23,6 +23,9 @@ use Illuminate\Http\RedirectResponse;
 //Human Resource
 use App\Models\Employees;
 use App\Models\ewallet_deposits;
+use App\Models\Projects;
+use App\Models\Transactions;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -364,6 +367,24 @@ public function view_schedule($id)
 
         return redirect()->back()->with('message', 'Employee Added Successfully');
     }
+
+    public function delete_employees($id)
+    {
+        $employee = Employees::find($id);
+        $employee->delete();
+        return redirect()->back()->with('message', 'Employee Deleted Successfully');
+    }
+    
+    public function deleteprojects($id)
+    {
+        $project = Projects::find($id);
+        if ($project) {
+            $project->delete();
+            return redirect()->back()->with('message', 'Project Deleted Successfully');
+        }
+        return redirect()->back()->with('message', 'Project Not Found');
+    }
+    
     // public function depositamount(Request $request)
     // {
     //     $data = update ewallet_deposits;
@@ -464,7 +485,8 @@ public function view_schedule($id)
 
     public function payments()
     {
-        return view('admin.payments');
+        $transactions = Transactions::all();
+        return view('admin.payments', compact('transactions'));
     }
 
     public function deposit()
@@ -473,54 +495,187 @@ public function view_schedule($id)
     }
 
     public function payEmployee(Request $request)
-{
-    $employeeId = $request->employee;
-    $amountToPay = $request->amount;
-    $type = $request->type;
-
-    // Sum the amounts for each source of deposits
-    $FNB = ewallet_deposits::where('source', 'FNB')->sum('amount');
-    $Zanaco = ewallet_deposits::where('source', 'Zanaco')->sum('amount');
-    $mobile = ewallet_deposits::where('source', 'Mobile Money')->sum('amount');
-
-    switch ($type) {
-        case 'FNB':
-            if ($FNB >= $amountToPay) {
-                // Deduct the amount from the FNB source and save the updated value
-                ewallet_deposits::where('source', 'FNB')->decrement('amount', $amountToPay);
-
-                return redirect()->back()->with('message', 'Payment successfully processed with FNB.');
-            } else {
-                return redirect()->back()->with('message', 'Insufficient funds in FNB.');
-            }
-            break;
-
-        case 'Zanaco':
-            if ($Zanaco >= $amountToPay) {
-                // Deduct the amount from the Zanaco source and save the updated value
-                ewallet_deposits::where('source', 'Zanaco')->decrement('amount', $amountToPay);
-
-                return redirect()->back()->with('message', 'Payment successfully processed with Zanaco.');
-            } else {
-                return redirect()->back()->with('message', 'Insufficient funds in Zanaco.');
-            }
-            break;
-
-        case 'Mobile Money':
-            if ($mobile >= $amountToPay) {
-                // Deduct the amount from the Mobile Money source and save the updated value
-                ewallet_deposits::where('source', 'Mobile Money')->decrement('amount', $amountToPay);
-
-                return redirect()->back()->with('message', 'Payment successfully processed with Mobile Money.');
-            } else {
-                return redirect()->back()->with('message', 'Insufficient funds in Mobile Money.');
-            }
-            break;
-
-        default:
-            return redirect()->back()->with('message', 'Invalid payment type.');
+    {
+        $employeeId = $request->employee;
+        $amountToPay = $request->amount;
+        $type = $request->type;
+    
+        // Get the employee name for record purposes
+        $employee = Employees::find($employeeId);
+    
+        // Sum the amounts for each source of deposits
+        $FNB = ewallet_deposits::where('source', 'FNB')->sum('amount');
+        $Zanaco = ewallet_deposits::where('source', 'Zanaco')->sum('amount');
+        $mobile = ewallet_deposits::where('source', 'Mobile Money')->sum('amount');
+    
+        switch ($type) {
+            case 'FNB':
+                if ($FNB >= $amountToPay) {
+                    // Deduct the amount from the FNB source and save the updated value
+                    ewallet_deposits::where('source', 'FNB')->decrement('amount', $amountToPay);
+                  
+                    // Insert transaction record
+                    Transactions::create([
+                        'name' => $employee->name,
+                        'amount' => $amountToPay,
+                        'account' => 'FNB',
+                        'date' => now()
+                    ]);
+    
+                    return redirect()->back()->with('message', 'Payment successfully processed with FNB.');
+                } else {
+                    return redirect()->back()->with('message', 'Insufficient funds in FNB.');
+                }
+                break;
+    
+            case 'Zanaco':
+                if ($Zanaco >= $amountToPay) {
+                    // Deduct the amount from the Zanaco source and save the updated value
+                    ewallet_deposits::where('source', 'Zanaco')->decrement('amount', $amountToPay);
+    
+                    // Insert transaction record
+                    Transactions::create([
+                        'name' => $employee->name,
+                        'amount' => $amountToPay,
+                        'account' => 'Zanaco',
+                        'date' => now()
+                    ]);
+    
+                    return redirect()->back()->with('message', 'Payment successfully processed with Zanaco.');
+                } else {
+                    return redirect()->back()->with('message', 'Insufficient funds in Zanaco.');
+                }
+                break;
+    
+            case 'Mobile Money':
+                if ($mobile >= $amountToPay) {
+                    // Deduct the amount from the Mobile Money source and save the updated value
+                    ewallet_deposits::where('source', 'Mobile Money')->decrement('amount', $amountToPay);
+    
+                    // Insert transaction record
+                    Transactions::create([
+                        'name' => $employee->name,
+                        'amount' => $amountToPay,
+                        'account' => 'Mobile Money',
+                        'date' => now()
+                    ]);
+    
+                    return redirect()->back()->with('message', 'Payment successfully processed with Mobile Money.');
+                } else {
+                    return redirect()->back()->with('message', 'Insufficient funds in Mobile Money.');
+                }
+                break;
+    
+            default:
+                return redirect()->back()->with('message', 'Invalid payment type.');
+        }
     }
+    
+
+
+//     public function payEmployee(Request $request)
+// {
+//     $employeeId = $request->employee;
+//     $amountToPay = $request->amount;
+//     $type = $request->type;
+
+//     // Sum the amounts for each source of deposits
+//     $FNB = ewallet_deposits::where('source', 'FNB')->sum('amount');
+//     $Zanaco = ewallet_deposits::where('source', 'Zanaco')->sum('amount');
+//     $mobile = ewallet_deposits::where('source', 'Mobile Money')->sum('amount');
+
+//     switch ($type) {
+//         case 'FNB':
+//             if ($FNB >= $amountToPay) {
+//                 // Deduct the amount from the FNB source and save the updated value
+//                 ewallet_deposits::where('source', 'FNB')->decrement('amount', $amountToPay);
+
+//                 return redirect()->back()->with('message', 'Payment successfully processed with FNB.');
+//             } else {
+//                 return redirect()->back()->with('message', 'Insufficient funds in FNB.');
+//             }
+//             break;
+
+//         case 'Zanaco':
+//             if ($Zanaco >= $amountToPay) {
+//                 // Deduct the amount from the Zanaco source and save the updated value
+//                 ewallet_deposits::where('source', 'Zanaco')->decrement('amount', $amountToPay);
+
+//                 return redirect()->back()->with('message', 'Payment successfully processed with Zanaco.');
+//             } else {
+//                 return redirect()->back()->with('message', 'Insufficient funds in Zanaco.');
+//             }
+//             break;
+
+//         case 'Mobile Money':
+//             if ($mobile >= $amountToPay) {
+//                 // Deduct the amount from the Mobile Money source and save the updated value
+//                 ewallet_deposits::where('source', 'Mobile Money')->decrement('amount', $amountToPay);
+
+//                 return redirect()->back()->with('message', 'Payment successfully processed with Mobile Money.');
+//             } else {
+//                 return redirect()->back()->with('message', 'Insufficient funds in Mobile Money.');
+//             }
+//             break;
+
+//         default:
+//             return redirect()->back()->with('message', 'Invalid payment type.');
+//     }
+// }
+
+public function projects()
+{
+    $newprojects = Projects::where('status', '=', 'new')->get();
+    $pendingprojects = Projects::where('status', '=', 'pending')->get();
+    $completedprojects = Projects::where('status', '=', 'completed')->get();
+
+    return view('admin.projects', compact('newprojects','pendingprojects','completedprojects'));
 }
+
+public function addproject()
+{
+    return view('admin.addproject');
+}
+
+public function createproject(Request $request)
+{
+    $data = new Projects;
+    $data->name  = $request->name;
+    $data->description = $request->description;
+    $data->duration = $request->duration;
+    $data->cost = $request->cost;
+    $data->status = $request->status;
+    
+    $data->save();
+
+    return redirect()->back()->with('message', 'Employee Added Successfully');
+}
+public function editproject($id)
+{
+    $projects = Projects::find($id);
+    return view('admin.editproject', compact('projects'));
+}
+public function updateproject($id)
+{
+    $project = Projects::find($id);
+    return view('admin.editproject', compact('projects'));
+}
+// public function updateproject(Request $request, $id)
+// {
+//     $project = Projects::find($id);
+//     if ($project) {
+//         $project->name = $request->input('name');
+//         $project->description = $request->input('description');
+//         $project->duration = $request->input('duration');
+//         $project->cost = $request->input('cost');
+//         $project->status = $request->input('status');
+//         $project->save();
+
+//         return redirect()->back()->with('message', 'Project Updated Successfully');
+//     }
+//     return redirect()->back()->with('message', 'Project Not Found');
+// }
+
 
 }
 

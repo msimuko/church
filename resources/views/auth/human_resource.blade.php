@@ -114,6 +114,18 @@
                 </div>
             </a>
         </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a href="{{ url('projects') }}" class="card text-decoration-none h-100">
+                <div class="img-container">
+                    <img src="{{ asset('images/cash1.png') }}" class="img-small" alt="Projects">
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Projects</h5>
+                    <p class="card-label">check projects here</p>
+                </div>
+            </a>
+        </div>
     </div>
 </body>
 

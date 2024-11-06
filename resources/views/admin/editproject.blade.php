@@ -3,15 +3,15 @@
 
 <head>
     <!-- Required meta tags -->
-   
+    @include('admin.css')
 </head>
 
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
-       
+     
         <!-- partial -->
-        @include('admin.update_employee_inventory')
+        @include('admin.editproject_inventory')
         <!-- container-scroller -->
         <!-- plugins:js -->
         @include('admin.script')
